@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+:root {
+  --bg-deep: #020617;
+  --fg-main: #f8fafc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--fg-main);
+  background:
+    radial-gradient(1200px 620px at 0% 0%, #0c4a6e 0%, var(--bg-deep) 52%),
+    radial-gradient(1000px 520px at 100% 100%, #78350f 0%, transparent 58%),
+    var(--bg-deep);
+  font-family: "Segoe UI", "Trebuchet MS", "Lucida Sans Unicode", sans-serif;
+}
