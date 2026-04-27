@@ -157,7 +157,7 @@ export default function SocketConnection() {
     <section className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
       <div className="pointer-events-none absolute -left-16 top-0 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl" />
-<h1>sssssssssssss</h1>
+
       <div className="relative mx-auto flex min-h-screen w-full items-center justify-center px-4 py-6 sm:px-6 lg:px-8">
         <div className="grid h-[min(860px,92vh)] w-[min(1240px,96vw)] overflow-hidden rounded-3xl border border-white/15 bg-white/10 shadow-[0_30px_90px_rgba(2,10,30,0.55)] backdrop-blur-xl lg:grid-cols-[300px_1fr] grid-rows-1">
           <aside className="hidden h-full flex-col overflow-y-auto border-r border-white/10 bg-slate-950/35 p-5 lg:flex">
@@ -187,6 +187,7 @@ export default function SocketConnection() {
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-cyan-200">الدردشة المباشرة</p>
               <h2 className="mt-1 text-2xl font-semibold text-white">غرفة الدردشة</h2>
+              <h3 className="text-sm text-slate-400">تحدث مع الآخرين في الوقت الفعلي</h3>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
