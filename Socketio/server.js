@@ -10,10 +10,35 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL 
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+const isLocalOrigin = (origin) => {
+  try {
+    const parsedOrigin = new URL(origin);
+    return parsedOrigin.hostname === "localhost" || parsedOrigin.hostname === "127.0.0.1";
+  } catch (_error) {
+    return false;
+  }
+};
+
+const isAllowedOrigin = (origin) => {
+  if (!origin || allowedOrigins.length === 0) {
+    return true;
+  }
+
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  if (process.env.NODE_ENV !== "production" && isLocalOrigin(origin)) {
+    return true;
+  }
+
+  return false;
+};
+
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }
