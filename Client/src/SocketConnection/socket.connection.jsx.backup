@@ -161,24 +161,11 @@ export default function SocketConnection() {
               <h2 className="mt-1 text-2xl font-semibold text-white">غرفة الدردشة</h2>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="flex items-center gap-3 rounded-full bg-slate-900/70 px-4 py-2 text-sm text-slate-200 ring-1 ring-white/10">
-                <span className={`inline-block h-2.5 w-2.5 rounded-full ${isConnected ? "bg-emerald-400" : "bg-rose-400"}`} />
-                <span>{isConnected ? "متصل" : "غير متصل"}</span>
-                <span className="text-slate-500">|</span>
-                <span>{onlineCount} عضو متصل</span>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setShowMobileUsers((prev) => !prev)}
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/70 px-4 py-2 text-sm text-slate-100 ring-1 ring-white/10 transition hover:border-cyan-300/40 hover:text-cyan-100 lg:hidden"
-                aria-expanded={showMobileUsers}
-                aria-controls="mobile-users-panel"
-              >
-                <span aria-hidden="true">👥</span>
-                <span>الأعضاء</span>
-              </button>
+            <div className="flex items-center gap-3 rounded-full bg-slate-900/70 px-4 py-2 text-sm text-slate-200 ring-1 ring-white/10">
+              <span className={`inline-block h-2.5 w-2.5 rounded-full ${isConnected ? "bg-emerald-400" : "bg-rose-400"}`} />
+              <span>{isConnected ? "متصل" : "غير متصل"}</span>
+              <span className="text-slate-500">|</span>
+              <span>{onlineCount} عضو متصل</span>
             </div>
           </header>
 
@@ -234,42 +221,6 @@ export default function SocketConnection() {
             </form>
           ) : (
             <>
-              {showMobileUsers ? (
-                <div id="mobile-users-panel" className="border-b border-white/10 bg-slate-950/55 px-6 py-4 lg:hidden">
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.22em] text-cyan-200">المتصلين الآن</p>
-                      <h3 className="mt-1 text-base font-semibold text-white">الأعضاء</h3>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowMobileUsers(false)}
-                      className="rounded-full border border-white/10 bg-slate-900/70 px-3 py-1.5 text-xs text-slate-200 transition hover:border-cyan-300/40 hover:text-cyan-100"
-                    >
-                      إغلاق ✕
-                    </button>
-                  </div>
-
-                  <div className="max-h-56 space-y-2 overflow-y-auto pr-1">
-                    {onlineUsers.length ? (
-                      onlineUsers.map((user) => (
-                        <div key={user.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-900/65 px-3 py-2">
-                          <span className="flex items-center gap-2">
-                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-cyan-300/20 text-xs font-semibold text-cyan-100">
-                              {user.name?.slice(0, 1)?.toUpperCase() || "U"}
-                            </span>
-                            <span className="text-sm text-slate-100">{user.name}</span>
-                          </span>
-                          {user.id === socketId ? <span className="text-xs text-amber-300">أنت</span> : null}
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-sm text-slate-400">لا يوجد أعضاء متصلين الآن</p>
-                    )}
-                  </div>
-                </div>
-              ) : null}
-
               <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-6 py-5">
                 {messages.map((item) => (
                   <article

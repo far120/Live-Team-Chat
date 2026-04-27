@@ -1,16 +1,119 @@
-# React + Vite
+# 💬 ELFAR LIVE CHAT
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## عن المشروع
 
-Currently, two official plugins are available:
+**ELFAR LIVE CHAT** هي تطبيق دردشة مباشرة حديث يسمح للمستخدمين بالتواصل مع بعضهم البعض في الوقت الفعلي. التطبيق يوفر تجربة تفاعلية سلسة وسهلة الاستخدام.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### الخدمات المتوفرة:
 
-## React Compiler
+✅ **دردشة مباشرة بالوقت الفعلي** - إرسال واستقبال الرسائل بدون تأخير
+✅ **قائمة الأعضاء** - رؤية من متصل الآن في الغرفة
+✅ **تنبيهات الكتابة** - معرفة من يكتب رسالة الآن
+✅ **حالة الاتصال** - مؤشر يوضح إذا كنت متصل أم لا
+✅ **عرض الرسائل** - الرسائل القديمة والجديدة بشكل منظم وسهل
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 👨‍💻 تم إنشاء هذا المشروع بواسطة:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+**ENG Mostafa ELFAR**
+
+---
+
+## 🚀 البدء السريع
+
+### 1️⃣ تثبيت المتطلبات:
+
+```bash
+npm install
+```
+
+### 2️⃣ إعداد ملف البيئة:
+
+```bash
+cp .env.example .env
+```
+
+### 3️⃣ تشغيل التطبيق:
+
+```bash
+npm run dev
+```
+
+سيفتح التطبيق تلقائياً على `http://localhost:5173`
+
+---
+
+## 📦 نشر التطبيق
+
+### نشر على Vercel (الواجهة الأمامية):
+
+هذا المشروع يستخدم Socket.IO، لذا يجب أن يعمل السيرفر على خادم يدعم اتصالات WebSocket الدائمة.
+
+**خطوات النشر:**
+
+1. انشر أولاً السيرفر من ملف `../Socketio/server.js` على خادم يدعم WebSocket (مثل Render أو Railway)
+
+2. أضف مشروع جديد في Vercel واختر مجلد `Client`
+
+3. أضف متغير البيئة في Vercel:
+
+```bash
+VITE_SOCKET_SERVER_URL=https://your-backend-domain.com
+```
+
+4. انقر على **Deploy**
+
+---
+
+## ⚙️ متغيرات البيئة المطلوبة
+
+| المتغير                  | الوصف                         |
+| ------------------------ | ----------------------------- |
+| `VITE_SOCKET_SERVER_URL` | رابط السيرفر الخلفي (Backend) |
+
+**مثال:**
+
+```bash
+VITE_SOCKET_SERVER_URL=https://my-chat-server.com
+```
+
+---
+
+## ⚠️ تذكير مهم للسيرفر الخلفي
+
+في إعدادات السيرفر، تأكد من إضافة متغير البيئة التالي:
+
+```bash
+ALLOWED_ORIGINS=https://your-vercel-app.vercel.app
+```
+
+هذا يسمح للتطبيق بالتواصل مع السيرفر بشكل آمن.
+
+---
+
+## 📱 المتطلبات
+
+- **Node.js** نسخة 16 أو أحدث
+- **npm** نسخة 7 أو أحدث
+
+---
+
+## 🛠️ التقنيات المستخدمة
+
+- ⚛️ **React** - لبناء واجهة المستخدم
+- 🔌 **Socket.IO** - للتواصل المباشر بين المستخدمين
+- ⚡ **Vite** - لبناء وتطوير التطبيق بسرعة
+- 🎨 **Tailwind CSS** - لتصميم واجهة جميلة وحديثة
+
+---
+
+## 📞 دعم المشروع
+
+إذا واجهت أي مشاكل أثناء الاستخدام أو التطوير، يمكنك التواصل مع:
+
+**ENG Mostafa ELFAR**
+
+---
+
+_آخر تحديث: 2026_

@@ -5,10 +5,31 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Origin not allowed by CORS"));
+    },
+    methods: ["GET", "POST"],
   },
+});
+
+app.get("/", (_req, res) => {
+  res.send("Socket.IO server is running");
+});
+
+app.get("/health", (_req, res) => {
+  res.status(200).json({ ok: true });
 });
 
 const connectedUsers = new Map();
@@ -99,5 +120,10 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
+  if (allowedOrigins.length) {
+    console.log(`Allowed origins: ${allowedOrigins.join(", ")}`);
+  } else {
+    console.log("Allowed origins: all (development mode)");
+  }
   console.log(`Server running on port ${PORT}`);
 });
