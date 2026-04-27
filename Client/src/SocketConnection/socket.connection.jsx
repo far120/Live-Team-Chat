@@ -188,7 +188,6 @@ export default function SocketConnection() {
               <p className="text-xs uppercase tracking-[0.25em] text-cyan-200">الدردشة المباشرة</p>
               <h2 className="mt-1 text-2xl font-semibold text-white">غرفة الدردشة</h2>
               <h3 className="text-sm text-slate-400">تحدث مع الآخرين في الوقت الفعلي</h3>
-              <h4> kfj </h4>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
