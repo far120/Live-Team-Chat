@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
-const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL || "http://localhost:3000";
+const DEFAULT_PRODUCTION_SOCKET_SERVER_URL = "https://backend-live-chat-production.up.railway.app/";
 
-const socket = io(SOCKET_SERVER_URL, {
-  autoConnect: false,
-  transports: ["websocket", "polling"],
-});
+const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL?.trim() || (import.meta.env.DEV ? "http://localhost:3000" : DEFAULT_PRODUCTION_SOCKET_SERVER_URL);
+
+const socket = SOCKET_SERVER_URL
+  ? io(SOCKET_SERVER_URL, {
+      autoConnect: false,
+      transports: ["websocket", "polling"],
+    })
+  : null;
 
 export default function SocketConnection() {
   const [username, setUsername] = useState("");
@@ -25,6 +29,12 @@ export default function SocketConnection() {
   const canJoin = useMemo(() => draftName.trim().length > 0, [draftName]);
 
   useEffect(() => {
+    if (!socket) {
+      setConnectionError("مطلوب تعيين VITE_SOCKET_SERVER_URL على رابط السيرفر المنشور قبل تشغيل النسخة المنشورة");
+      setIsConnected(false);
+      return undefined;
+    }
+
     const onConnect = () => {
       setConnectionError("");
       setIsConnected(true);
@@ -99,7 +109,7 @@ export default function SocketConnection() {
   const joinChat = (event) => {
     event.preventDefault();
     const name = draftName.trim().slice(0, 20);
-    if (!name) return;
+    if (!name || !socket) return;
 
     setUsername(name);
     
@@ -119,7 +129,7 @@ export default function SocketConnection() {
   const sendMessage = (event) => {
     event.preventDefault();
     const text = message.trim();
-    if (!text || !username) return;
+    if (!text || !username || !socket) return;
 
     socket.emit("typing", false);
     socket.emit("send-message", text);
@@ -130,7 +140,7 @@ export default function SocketConnection() {
     const value = event.target.value;
     setMessage(value);
 
-    if (!username) return;
+    if (!username || !socket) return;
     socket.emit("typing", value.trim().length > 0);
   };
 

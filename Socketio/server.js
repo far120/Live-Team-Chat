@@ -19,12 +19,32 @@ const isLocalOrigin = (origin) => {
   }
 };
 
+const matchesWildcardOrigin = (origin, pattern) => {
+  if (!pattern.includes("*")) {
+    return origin === pattern;
+  }
+
+  try {
+    const originUrl = new URL(origin);
+    const patternUrl = new URL(pattern.replace("*.", "placeholder."));
+
+    if (originUrl.protocol !== patternUrl.protocol) {
+      return false;
+    }
+
+    const baseDomain = patternUrl.hostname.replace(/^placeholder\./, "");
+    return originUrl.hostname === baseDomain || originUrl.hostname.endsWith(`.${baseDomain}`);
+  } catch (_error) {
+    return false;
+  }
+};
+
 const isAllowedOrigin = (origin) => {
   if (!origin || allowedOrigins.length === 0) {
     return true;
   }
 
-  if (allowedOrigins.includes(origin)) {
+  if (allowedOrigins.some((pattern) => matchesWildcardOrigin(origin, pattern))) {
     return true;
   }
 

@@ -62,6 +62,12 @@ npm run dev
 VITE_SOCKET_SERVER_URL=https://your-backend-domain.com
 ```
 
+إذا كنت تستخدم Preview deployments أو نطاقات Vercel متغيرة، اجعل السيرفر الخلفي يسمح بأصل مثل:
+
+```bash
+ALLOWED_ORIGINS=https://*.vercel.app,https://your-vercel-app.vercel.app
+```
+
 4. انقر على **Deploy**
 
 ---
