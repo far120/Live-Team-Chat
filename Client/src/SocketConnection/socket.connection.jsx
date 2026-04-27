@@ -18,21 +18,25 @@ export default function SocketConnection() {
   const [typingUsers, setTypingUsers] = useState([]);
   const [socketId, setSocketId] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState("");
   const [showMobileUsers, setShowMobileUsers] = useState(false);
   const bottomRef = useRef(null);
 
   const canJoin = useMemo(() => draftName.trim().length > 0, [draftName]);
 
   useEffect(() => {
-    socket.connect();
-
     const onConnect = () => {
+      setConnectionError("");
       setIsConnected(true);
       setSocketId(socket.id || "");
     };
     const onDisconnect = () => {
       setIsConnected(false);
       setTypingUsers([]);
+    };
+    const onConnectError = (error) => {
+      setIsConnected(false);
+      setConnectionError(error?.message || "تعذر الاتصال بالسيرفر");
     };
     const onChatMessage = (payload) => {
       setMessages((prev) => [...prev, { ...payload, type: "chat" }]);
@@ -62,15 +66,23 @@ export default function SocketConnection() {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on("connect_error", onConnectError);
     socket.on("receive-message", onChatMessage);
     socket.on("system-message", onSystemMessage);
     socket.on("online-count", onOnlineCount);
     socket.on("online-users", onOnlineUsers);
     socket.on("user-typing", onUserTyping);
 
+    setIsConnected(socket.connected);
+    setSocketId(socket.id || "");
+    if (!socket.connected) {
+      socket.connect();
+    }
+
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
+      socket.off("connect_error", onConnectError);
       socket.off("receive-message", onChatMessage);
       socket.off("system-message", onSystemMessage);
       socket.off("online-count", onOnlineCount);
@@ -155,7 +167,7 @@ export default function SocketConnection() {
           </aside>
 
           <div className="flex h-full flex-col overflow-hidden">
-          <header className="flex flex-shrink-0 flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <header className="flex shrink-0 flex-col gap-3 border-b border-white/10 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-cyan-200">الدردشة المباشرة</p>
               <h2 className="mt-1 text-2xl font-semibold text-white">غرفة الدردشة</h2>
@@ -186,7 +198,7 @@ export default function SocketConnection() {
             <form onSubmit={joinChat} className="mx-auto grid h-full w-full max-w-md content-center gap-4 px-6 py-14">
               {/* الترحيب والشرح */}
               <div className="mb-8 text-center">
-                <h1 className="mb-4 text-4xl font-bold bg-gradient-to-r from-cyan-400 via-sky-400 to-amber-300 bg-clip-text text-transparent">
+                <h1 className="mb-4 text-4xl font-bold bg-linear-to-r from-cyan-400 via-sky-400 to-amber-300 bg-clip-text text-transparent">
                   ELFAR CHAT
                 </h1>
                 <p className="text-cyan-100 font-semibold mb-1">يرحب بكم 🎉</p>
@@ -220,7 +232,7 @@ export default function SocketConnection() {
               <button
                 type="submit"
                 disabled={!canJoin || !isConnected}
-                className="rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-amber-300 px-5 py-3 font-semibold text-slate-900 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-45"
+                className="rounded-2xl bg-linear-to-r from-cyan-400 via-sky-400 to-amber-300 px-5 py-3 font-semibold text-slate-900 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-45"
               >
                 ادخل الدردشة
               </button>
@@ -228,7 +240,7 @@ export default function SocketConnection() {
               {/* تنبيه إذا كان السيرفر معطل */}
               {!isConnected && (
                 <p className="text-xs text-rose-400 text-center">
-                  ⚠️ جاري محاولة الاتصال بالسيرفر... يرجى الانتظار
+                  ⚠️ {connectionError ? `فشل الاتصال بالسيرفر: ${connectionError}` : "جاري محاولة الاتصال بالسيرفر... يرجى الانتظار"}
                 </p>
               )}
             </form>
@@ -307,7 +319,7 @@ export default function SocketConnection() {
                 <div ref={bottomRef} />
               </div>
 
-              <form onSubmit={sendMessage} className="grid flex-shrink-0 gap-3 border-t border-white/10 bg-slate-950/35 px-6 py-5 sm:grid-cols-[1fr_auto] grid-cols-1">
+              <form onSubmit={sendMessage} className="grid shrink-0 gap-3 border-t border-white/10 bg-slate-950/35 px-6 py-5 sm:grid-cols-[1fr_auto] grid-cols-1">
                 <input
                   type="text"
                   value={message}
