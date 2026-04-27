@@ -1,16 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
-const DEFAULT_PRODUCTION_SOCKET_SERVER_URL = "https://backend-live-chat-production.up.railway.app/";
+// const DEFAULT_PRODUCTION_SOCKET_SERVER_URL = "https://backend-live-chat-production.up.railway.app/";
 
-const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL?.trim() || (import.meta.env.DEV ? "http://localhost:3000" : DEFAULT_PRODUCTION_SOCKET_SERVER_URL);
+// const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL?.trim() || (import.meta.env.DEV ? "http://localhost:3000" : DEFAULT_PRODUCTION_SOCKET_SERVER_URL);
 
-const socket = SOCKET_SERVER_URL
-  ? io(SOCKET_SERVER_URL, {
-      autoConnect: false,
-      transports: ["websocket", "polling"],
-    })
-  : null;
+// const socket = SOCKET_SERVER_URL
+//   ? io(SOCKET_SERVER_URL, {
+//       autoConnect: false,
+//       transports: ["websocket", "polling"],
+//     })
+//   : null;
+
+const socket = io(
+  import.meta.env.DEV
+    ? "http://localhost:3000"
+    : "https://backend-live-chat-production.up.railway.app"
+);
 
 export default function SocketConnection() {
   const [username, setUsername] = useState("");

@@ -5,77 +5,86 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || "")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+// const allowedOrigins = (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || "")
+//   .split(",")
+//   .map((origin) => origin.trim())
+//   .filter(Boolean);
 
-const isLocalOrigin = (origin) => {
-  try {
-    const parsedOrigin = new URL(origin);
-    return parsedOrigin.hostname === "localhost" || parsedOrigin.hostname === "127.0.0.1";
-  } catch (_error) {
-    return false;
-  }
-};
+// const isLocalOrigin = (origin) => {
+//   try {
+//     const parsedOrigin = new URL(origin);
+//     return parsedOrigin.hostname === "localhost" || parsedOrigin.hostname === "127.0.0.1";
+//   } catch (_error) {
+//     return false;
+//   }
+// };
 
-const matchesWildcardOrigin = (origin, pattern) => {
-  if (!pattern.includes("*")) {
-    return origin === pattern;
-  }
+// const matchesWildcardOrigin = (origin, pattern) => {
+//   if (!pattern.includes("*")) {
+//     return origin === pattern;
+//   }
 
-  try {
-    const originUrl = new URL(origin);
-    const patternUrl = new URL(pattern.replace("*.", "placeholder."));
+//   try {
+//     const originUrl = new URL(origin);
+//     const patternUrl = new URL(pattern.replace("*.", "placeholder."));
 
-    if (originUrl.protocol !== patternUrl.protocol) {
-      return false;
-    }
+//     if (originUrl.protocol !== patternUrl.protocol) {
+//       return false;
+//     }
 
-    const baseDomain = patternUrl.hostname.replace(/^placeholder\./, "");
-    return originUrl.hostname === baseDomain || originUrl.hostname.endsWith(`.${baseDomain}`);
-  } catch (_error) {
-    return false;
-  }
-};
+//     const baseDomain = patternUrl.hostname.replace(/^placeholder\./, "");
+//     return originUrl.hostname === baseDomain || originUrl.hostname.endsWith(`.${baseDomain}`);
+//   } catch (_error) {
+//     return false;
+//   }
+// };
 
-const isAllowedOrigin = (origin) => {
-  if (!origin || allowedOrigins.length === 0) {
-    return true;
-  }
+// const isAllowedOrigin = (origin) => {
+//   if (!origin || allowedOrigins.length === 0) {
+//     return true;
+//   }
 
-  if (allowedOrigins.some((pattern) => matchesWildcardOrigin(origin, pattern))) {
-    return true;
-  }
+//   if (allowedOrigins.some((pattern) => matchesWildcardOrigin(origin, pattern))) {
+//     return true;
+//   }
 
-  if (process.env.NODE_ENV !== "production" && isLocalOrigin(origin)) {
-    return true;
-  }
+//   if (process.env.NODE_ENV !== "production" && isLocalOrigin(origin)) {
+//     return true;
+//   }
 
-  return false;
-};
+//   return false;
+// };
+
+
+
+// const io = new Server(server, {
+//   cors: {
+//     origin: (origin, callback) => {
+//       if (isAllowedOrigin(origin)) {
+//         callback(null, true);
+//         return;
+//       }
+
+//       callback(new Error("Origin not allowed by CORS"));
+//     },
+//     methods: ["GET", "POST"],
+//   },
+// });
+
 
 const io = new Server(server, {
   cors: {
-    origin: (origin, callback) => {
-      if (isAllowedOrigin(origin)) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error("Origin not allowed by CORS"));
-    },
-    methods: ["GET", "POST"],
-  },
+    origin: "*"
+  }
 });
 
-app.get("/", (_req, res) => {
-  res.send("Socket.IO server is running");
-});
+// app.get("/", (_req, res) => {
+//   res.send("Socket.IO server is running");
+// });
 
-app.get("/health", (_req, res) => {
-  res.status(200).json({ ok: true });
-});
+// app.get("/health", (_req, res) => {
+//   res.status(200).json({ ok: true });
+// });
 
 const connectedUsers = new Map();
 
@@ -165,10 +174,14 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
-  if (allowedOrigins.length) {
-    console.log(`Allowed origins: ${allowedOrigins.join(", ")}`);
-  } else {
-    console.log("Allowed origins: all (development mode)");
-  }
-  console.log(`Server running on port ${PORT}`);
-});
+  console.log("Server running on port " + PORT);
+})
+
+// server.listen(PORT, () => {
+//   if (allowedOrigins.length) {
+//     console.log(`Allowed origins: ${allowedOrigins.join(", ")}`);
+//   } else {
+//     console.log("Allowed origins: all (development mode)");
+//   }
+//   console.log(`Server running on port ${PORT}`);
+// });
